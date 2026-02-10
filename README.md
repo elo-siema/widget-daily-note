@@ -1,5 +1,8 @@
 # Obsidian Daily Note Widget for macOS
 
+<img width="378" height="370" alt="image" src="https://github.com/user-attachments/assets/9a326b6d-871d-438a-8209-d26d4c343774" />
+
+
 A macOS menu bar app and widget that displays today's Obsidian daily note on your desktop.
 
 ## Features
