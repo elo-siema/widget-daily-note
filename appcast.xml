@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+  <channel>
+    <title>Daily Note</title>
+    <item>
+      <title>Version 0.1.2</title>
+      <sparkle:version>0.1.2</sparkle:version>
+      <sparkle:shortVersionString>0.1.2</sparkle:shortVersionString>
+      <pubDate>Tue, 10 Feb 2026 17:08:02 +0000</pubDate>
+      <enclosure url="https://github.com/elo-siema/widget-daily-note/releases/download/v0.1.2/DailyNote.dmg" sparkle:edSignature="tHO5UOpMK3FlkuWT5taxLQcb1UzZpZ3jpk7GGRkpKPAPxKWxe3+E1v0vcwqv/hMr13Zgngk5zulryO3ZN2LwBg==" length="1195846" type="application/octet-stream" />
+    </item>
+  </channel>
+</rss>
