@@ -1,0 +1,35 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build
+        run: |
+          xcodebuild -scheme DailyNote -configuration Release \
+            CODE_SIGN_IDENTITY="-" \
+            build SYMROOT=$PWD/build
+
+      - name: Create DMG
+        run: |
+          mkdir -p dmg
+          cp -R build/Release/DailyNote.app dmg/
+          ln -s /Applications dmg/Applications
+          hdiutil create -volname "Daily Note" -srcfolder dmg -ov -format UDZO DailyNote.dmg
+
+      - name: Upload to release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: DailyNote.dmg
