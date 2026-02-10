@@ -1,0 +1,34 @@
+name: DailyNote
+options:
+  bundleIdPrefix: com.user
+  deploymentTarget:
+    macOS: "14.0"
+
+targets:
+  DailyNote:
+    type: application
+    platform: macOS
+    sources:
+      - DailyNote
+      - Shared
+    settings:
+      GENERATE_INFOPLIST_FILE: false
+      INFOPLIST_FILE: DailyNote/Info.plist
+      CODE_SIGN_ENTITLEMENTS: DailyNote/DailyNote.entitlements
+    dependencies:
+      - target: DailyNoteWidgetExtension
+
+  DailyNoteWidgetExtension:
+    type: app-extension
+    platform: macOS
+    sources:
+      - DailyNoteWidget
+      - Shared
+    settings:
+      GENERATE_INFOPLIST_FILE: true
+      INFOPLIST_KEY_CFBundleDisplayName: Daily Note
+      INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier: com.apple.widgetkit-extension
+      CODE_SIGN_ENTITLEMENTS: DailyNoteWidget/DailyNoteWidget.entitlements
+      LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"
+      PRODUCT_BUNDLE_IDENTIFIER: com.user.DailyNote.DailyNoteWidget
+      SKIP_INSTALL: true
