@@ -1,20 +1,38 @@
 import SwiftUI
 import WidgetKit
+import Sparkle
 
 @main
 struct DailyNoteApp: App {
     @NSApplicationDelegateAdaptor private var appDelegate: AppDelegate
+    private let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
 
     var body: some Scene {
         MenuBarExtra("Daily Note", systemImage: "note.text") {
-            MenuBarView(appDelegate: appDelegate)
+            MenuBarView(appDelegate: appDelegate, updater: updaterController.updater)
         }
+    }
+}
+
+final class CheckForUpdatesViewModel: ObservableObject {
+    @Published var canCheckForUpdates = false
+    init(updater: SPUUpdater) {
+        updater.publisher(for: \.canCheckForUpdates)
+            .assign(to: &$canCheckForUpdates)
     }
 }
 
 struct MenuBarView: View {
     @ObservedObject var appDelegate: AppDelegate
+    @ObservedObject private var updateViewModel: CheckForUpdatesViewModel
+    private let updater: SPUUpdater
     private var vaults: [VaultInfo] { NoteReader.discoverVaults() }
+
+    init(appDelegate: AppDelegate, updater: SPUUpdater) {
+        self.appDelegate = appDelegate
+        self.updater = updater
+        self.updateViewModel = CheckForUpdatesViewModel(updater: updater)
+    }
 
     var body: some View {
         if vaults.count > 1 {
@@ -40,6 +58,9 @@ struct MenuBarView: View {
             }
         }
         .keyboardShortcut("o")
+        Divider()
+        Button("Check for Updates…", action: updater.checkForUpdates)
+            .disabled(!updateViewModel.canCheckForUpdates)
         Divider()
         Button("Quit") { NSApplication.shared.terminate(nil) }
             .keyboardShortcut("q")

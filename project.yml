@@ -4,6 +4,11 @@ options:
   deploymentTarget:
     macOS: "14.0"
 
+packages:
+  Sparkle:
+    url: https://github.com/sparkle-project/Sparkle
+    from: "2.8.0"
+
 targets:
   DailyNote:
     type: application
@@ -17,6 +22,7 @@ targets:
       CODE_SIGN_ENTITLEMENTS: DailyNote/DailyNote.entitlements
     dependencies:
       - target: DailyNoteWidgetExtension
+      - package: Sparkle
 
   DailyNoteWidgetExtension:
     type: app-extension

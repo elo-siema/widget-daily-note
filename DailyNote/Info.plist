@@ -20,6 +20,10 @@
 	<string>1</string>
 	<key>LSUIElement</key>
 	<true/>
+	<key>SUFeedURL</key>
+	<string>https://raw.githubusercontent.com/elo-siema/widget-daily-note/main/appcast.xml</string>
+	<key>SUPublicEDKey</key>
+	<string>6Dj8NuCOeOMT0wQaacC93VSo7JB20FX5Yhw9eVlSf3o=</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>

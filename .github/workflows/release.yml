@@ -21,8 +21,11 @@ jobs:
 
       - name: Build
         run: |
+          VERSION=${GITHUB_REF_NAME#v}
           xcodebuild -scheme DailyNote -configuration Release \
             CODE_SIGN_IDENTITY="-" \
+            MARKETING_VERSION="$VERSION" \
+            CURRENT_PROJECT_VERSION="$VERSION" \
             build SYMROOT=$PWD/build
 
       - name: Re-sign with clean entitlements
@@ -40,6 +43,39 @@ jobs:
           cp -R build/Release/DailyNote.app dmg/
           ln -s /Applications dmg/Applications
           hdiutil create -volname "Daily Note" -srcfolder dmg -ov -format UDZO DailyNote.dmg
+
+      - name: Generate appcast
+        env:
+          SPARKLE_PRIVATE_KEY: ${{ secrets.SPARKLE_PRIVATE_KEY }}
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          SIGN_UPDATE=$(find ~/Library/Developer/Xcode/DerivedData -path "*/artifacts/sparkle/Sparkle/bin/sign_update" -print -quit)
+          SIGNATURE=$(echo "$SPARKLE_PRIVATE_KEY" | "$SIGN_UPDATE" DailyNote.dmg --ed-key-file -)
+          URL="https://github.com/elo-siema/widget-daily-note/releases/download/${GITHUB_REF_NAME}/DailyNote.dmg"
+          DATE=$(date -R)
+          cat > appcast.xml <<APPCAST
+          <?xml version="1.0" encoding="utf-8"?>
+          <rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+            <channel>
+              <title>Daily Note</title>
+              <item>
+                <title>Version ${VERSION}</title>
+                <sparkle:version>${VERSION}</sparkle:version>
+                <sparkle:shortVersionString>${VERSION}</sparkle:shortVersionString>
+                <pubDate>${DATE}</pubDate>
+                <enclosure url="${URL}" ${SIGNATURE} type="application/octet-stream" />
+              </item>
+            </channel>
+          </rss>
+          APPCAST
+
+      - name: Commit appcast
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add appcast.xml
+          git commit -m "Update appcast for ${GITHUB_REF_NAME}"
+          git push origin HEAD:main
 
       - name: Upload to release
         uses: softprops/action-gh-release@v2
