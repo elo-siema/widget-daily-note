@@ -32,3 +32,13 @@ targets:
       LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"
       PRODUCT_BUNDLE_IDENTIFIER: com.user.DailyNote.DailyNoteWidget
       SKIP_INSTALL: true
+
+  DailyNoteTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - Tests
+    settings:
+      GENERATE_INFOPLIST_FILE: true
+    dependencies:
+      - target: DailyNote

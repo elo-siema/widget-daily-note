@@ -51,10 +51,60 @@ struct NoteReader {
         return config
     }
 
+    /// Convert Moment.js format tokens (used by Obsidian) to Swift DateFormatter tokens
+    static func momentToSwift(_ moment: String) -> String {
+        // Order matters: replace longer tokens first to avoid partial matches
+        // Moment.js escapes literal text in []
+        var result = ""
+        var i = moment.startIndex
+        while i < moment.endIndex {
+            if moment[i] == "[" {
+                // Literal text in brackets → wrap in single quotes for DateFormatter
+                if let close = moment[moment.index(after: i)...].firstIndex(of: "]") {
+                    result += "'"
+                    result += String(moment[moment.index(after: i)..<close])
+                    result += "'"
+                    i = moment.index(after: close)
+                    continue
+                }
+            }
+            // Greedy match longest known token
+            var matched = false
+            for (token, replacement) in momentTokenMap {
+                let end = moment.index(i, offsetBy: token.count, limitedBy: moment.endIndex) ?? moment.endIndex
+                if moment[i..<end] == token {
+                    result += replacement
+                    i = end
+                    matched = true
+                    break
+                }
+            }
+            if !matched {
+                result += String(moment[i])
+                i = moment.index(after: i)
+            }
+        }
+        return result
+    }
+
+    // Sorted longest-first to match greedily
+    private static let momentTokenMap: [(String, String)] = [
+        ("YYYY", "yyyy"), ("YY", "yy"),
+        ("MMMM", "MMMM"), ("MMM", "MMM"), ("MM", "MM"), ("M", "M"),
+        ("DDDD", "DDD"), ("DDD", "DDD"), ("DD", "dd"), ("D", "d"),
+        ("dddd", "EEEE"), ("ddd", "EEE"), ("dd", "EEEEEE"), ("d", "c"),
+        ("HH", "HH"), ("H", "H"), ("hh", "hh"), ("h", "h"),
+        ("mm", "mm"), ("m", "m"),
+        ("ss", "ss"), ("s", "s"),
+        ("A", "a"), ("a", "a"),
+    ]
+
     static func todayFilename(for vault: VaultInfo) -> String {
         let config = dailyNotesConfig(for: vault)
+        let momentFormat = config.format ?? "YYYY-MM-DD"
         let fmt = DateFormatter()
-        fmt.dateFormat = config.format ?? "yyyy-MM-dd"
+        fmt.locale = Locale(identifier: "en_US_POSIX")
+        fmt.dateFormat = momentToSwift(momentFormat)
         return fmt.string(from: Date())
     }
 
