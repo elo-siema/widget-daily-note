@@ -18,6 +18,7 @@ struct NoteReader {
     }
     static let obsidianConfigURL = URL(fileURLWithPath: "\(home)/Library/Application Support/obsidian/obsidian.json")
     static var cacheFile: URL { URL(fileURLWithPath: "\(containerDir)/note.txt") }
+    static var cacheFilenameFile: URL { URL(fileURLWithPath: "\(containerDir)/filename.txt") }
     static var selectedVaultFile: URL { URL(fileURLWithPath: "\(containerDir)/vault.txt") }
 
     static func discoverVaults() -> [VaultInfo] {
@@ -103,18 +104,11 @@ struct NoteReader {
         let config = dailyNotesConfig(for: vault)
         let momentFormat = config.format ?? "YYYY-MM-DD"
         let fmt = DateFormatter()
-        fmt.locale = Locale(identifier: "en_US_POSIX")
         fmt.dateFormat = momentToSwift(momentFormat)
         return fmt.string(from: Date())
     }
 
-    static func todayFilename() -> String {
-        guard let vault = selectedVault() else { return DateFormatter.localizedString(from: Date(), dateStyle: .short, timeStyle: .none) }
-        return todayFilename(for: vault)
-    }
-
-    static func readVault() -> String {
-        guard let vault = selectedVault() else { return "" }
+    static func readVault(_ vault: VaultInfo) -> String {
         let config = dailyNotesConfig(for: vault)
         let folder = config.folder ?? ""
         let filename = todayFilename(for: vault)
@@ -125,10 +119,16 @@ struct NoteReader {
     }
 
     static func updateCache() {
-        try? readVault().write(to: cacheFile, atomically: true, encoding: .utf8)
+        guard let vault = selectedVault() else { return }
+        try? readVault(vault).write(to: cacheFile, atomically: true, encoding: .utf8)
+        try? todayFilename(for: vault).write(to: cacheFilenameFile, atomically: true, encoding: .utf8)
     }
 
     static func readCached() -> String {
         (try? String(contentsOf: cacheFile, encoding: .utf8)) ?? ""
+    }
+
+    static func readCachedFilename() -> String {
+        (try? String(contentsOf: cacheFilenameFile, encoding: .utf8)) ?? ""
     }
 }

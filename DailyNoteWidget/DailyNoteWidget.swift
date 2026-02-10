@@ -9,7 +9,7 @@ struct NoteEntry: TimelineEntry {
 
 struct NoteProvider: TimelineProvider {
     func placeholder(in context: Context) -> NoteEntry {
-        NoteEntry(date: .now, content: "Your daily note will appear here...", dateString: NoteReader.todayFilename())
+        NoteEntry(date: .now, content: "Your daily note will appear here...", dateString: NoteReader.readCachedFilename())
     }
 
     func getSnapshot(in context: Context, completion: @escaping (NoteEntry) -> Void) {
@@ -29,7 +29,7 @@ struct NoteProvider: TimelineProvider {
         return NoteEntry(
             date: .now,
             content: display.isEmpty ? "No note for today." : display,
-            dateString: NoteReader.todayFilename()
+            dateString: NoteReader.readCachedFilename()
         )
     }
 }

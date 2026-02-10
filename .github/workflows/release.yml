@@ -25,6 +25,15 @@ jobs:
             CODE_SIGN_IDENTITY="-" \
             build SYMROOT=$PWD/build
 
+      - name: Re-sign with clean entitlements
+        run: |
+          codesign --force --sign - \
+            --entitlements DailyNoteWidget/DailyNoteWidget.entitlements \
+            build/Release/DailyNote.app/Contents/PlugIns/DailyNoteWidgetExtension.appex
+          codesign --force --sign - \
+            --entitlements DailyNote/DailyNote.entitlements \
+            build/Release/DailyNote.app
+
       - name: Create DMG
         run: |
           mkdir -p dmg

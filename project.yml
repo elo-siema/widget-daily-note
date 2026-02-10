@@ -25,9 +25,8 @@ targets:
       - DailyNoteWidget
       - Shared
     settings:
-      GENERATE_INFOPLIST_FILE: true
-      INFOPLIST_KEY_CFBundleDisplayName: Daily Note
-      INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier: com.apple.widgetkit-extension
+      GENERATE_INFOPLIST_FILE: false
+      INFOPLIST_FILE: DailyNoteWidget/Info.plist
       CODE_SIGN_ENTITLEMENTS: DailyNoteWidget/DailyNoteWidget.entitlements
       LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks @executable_path/../../../../Frameworks"
       PRODUCT_BUNDLE_IDENTIFIER: com.user.DailyNote.DailyNoteWidget
