@@ -17,7 +17,7 @@ A macOS menu bar app and widget that displays today's Obsidian daily note on you
 
 1. Download `DailyNote.dmg` from [Releases](https://github.com/elo-siema/widget-daily-note/releases)
 2. Drag `DailyNote.app` to `/Applications`
-3. Launch the app (right-click → Open the first time since it's unsigned)
+3. Launch the app — the first time, macOS will block it. Go to **System Settings → Privacy & Security**, scroll down, and click **Open Anyway**
 4. Add the "Daily Note" widget from the macOS widget gallery
 
 ## Build from source
