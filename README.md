@@ -12,6 +12,7 @@ A macOS menu bar app and widget that displays today's Obsidian daily note on you
 - Widget updates in real-time as you edit your note
 - Click the widget to open the note in Obsidian
 - Multiple vault support with picker in the menu bar
+- Automatic updates via Sparkle
 
 ## Install
 
