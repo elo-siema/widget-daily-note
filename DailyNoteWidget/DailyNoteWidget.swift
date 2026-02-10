@@ -56,7 +56,7 @@ struct DailyNoteWidgetView: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
         }
         .padding()
-        .widgetURL(URL(string: "dailynote://open?file=\(entry.dateString)")!)
+        .widgetURL(URL(string: "dailynote://daily")!)
     }
 }
 

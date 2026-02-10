@@ -35,8 +35,7 @@ struct MenuBarView: View {
         Button("Open Today's Note") {
             guard let vault = appDelegate.selectedVault else { return }
             let name = vault.name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? vault.name
-            let file = NoteReader.todayFilename(for: vault)
-            if let url = URL(string: "obsidian://open?vault=\(name)&file=\(file)") {
+            if let url = URL(string: "obsidian://daily?vault=\(name)") {
                 NSWorkspace.shared.open(url)
             }
         }
@@ -75,12 +74,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
     @objc private func handleURL(_ event: NSAppleEventDescriptor, withReply reply: NSAppleEventDescriptor) {
         guard let urlString = event.paramDescriptor(forKeyword: keyDirectObject)?.stringValue,
               let url = URL(string: urlString), url.scheme == "dailynote",
-              let file = URLComponents(url: url, resolvingAgainstBaseURL: false)?
-                  .queryItems?.first(where: { $0.name == "file" })?.value,
               let vault = selectedVault
         else { return }
         let name = vault.name.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? vault.name
-        if let obsidianURL = URL(string: "obsidian://open?vault=\(name)&file=\(file)") {
+        if let obsidianURL = URL(string: "obsidian://daily?vault=\(name)") {
             NSWorkspace.shared.open(obsidianURL)
         }
     }
