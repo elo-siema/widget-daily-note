@@ -20,6 +20,8 @@ targets:
       GENERATE_INFOPLIST_FILE: false
       INFOPLIST_FILE: DailyNote/Info.plist
       CODE_SIGN_ENTITLEMENTS: DailyNote/DailyNote.entitlements
+      MARKETING_VERSION: "0.0.0"
+      CURRENT_PROJECT_VERSION: "0.0.0"
     dependencies:
       - target: DailyNoteWidgetExtension
       - package: Sparkle
